@@ -27,30 +27,63 @@ export default {
 
 <style lang="scss">
 body {
+	margin: 0;
+
 	#app {
 		font-family: Avenir, Helvetica, Arial, sans-serif;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 		text-align: center;
 		color: #2c3e50;
+
+		.frequency {
+			&-1 {
+				background-color: #BBDEFB;
+				color: #333;
+			}
+			&-2 {
+				background-color: #90CAF9;
+				color: #333;
+			}
+			&-3 {
+				background-color: #64B5F6;
+				color: white;
+			}
+			&-4 {
+				background-color: #42A5F5;
+				color: white;
+			}
+			&-5 {
+				background-color: #2196F3;
+				color: white;
+			}
+			&-6 {
+				background-color: #1E88E5;
+				color: white;
+			}
+			&-7 {
+				background-color: #1976D2;
+				color: white;
+			}
+		}
 	}
 }
 
 #nav {
-  padding: 30px;
+	padding: 12px;
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+	a {
+		font-weight: bold;
+		color: #2c3e50;
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+		&.router-link-exact-active {
+			color: #42b983;
+		}
+	}
 }
 
 button, input {
-	padding: 4px 8px;
+	padding: 8px 12px;
 	background-color: white;
 	border: 1px solid;
 }
@@ -62,6 +95,49 @@ button {
 
 	&:disabled {
 		color: darkgray;
+	}
+}
+
+.cancel-button {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	cursor: pointer;
+	position: relative;
+	box-sizing: border-box;
+
+	&::before, &::after {
+		content: '';
+		position: absolute;
+		height: 14px;
+		width: 1px;
+		top: 2px;
+		left: 9px;
+		background-color: gray;
+	}
+
+	&::before {
+		transform: rotate(45deg);
+	}
+
+	&::after {
+		transform: rotate(135deg);
+	}
+
+	&:hover {
+		&::before, &::after {
+			background-color: black;
+		}
+	}
+}
+
+.d-flex {
+	display: flex !important;
+}
+
+.color {
+	&-danger {
+		color: #b71c1c !important;
 	}
 }
 </style>

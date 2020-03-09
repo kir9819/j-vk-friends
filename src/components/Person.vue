@@ -1,7 +1,7 @@
 <template>
 	<div
-		style="display: flex; justify-content: space-between; align-items: start; text-align: left; border-radius: 12px; padding: 12px; margin: 4px;"
-		:style="`background-color: ${chosenPersonsLocal.includes(id) ? 'lightgreen' : ''}; ${person.is_closed ? 'color: lightgray;' : ''}`"
+		style="display: flex; justify-content: space-between; align-items: start; text-align: left; border-radius: 12px; padding: 12px; margin: 4px; border: 1px solid;"
+		:style="`${chosenPersonsLocal.includes(id) ? 'background-color: #81C784; border-color: #81c784' : ''}; ${person.is_closed ? 'color: lightgray;' : ''}`"
 	>
 		<label
 			:title="person.is_closed ? 'Пользователь скрыл страницу, друзья недоступны' : null"
@@ -28,7 +28,7 @@
 				</template>
 			</div>
 		</label>
-		<button style="margin-left: 4px;" @click="removePerson(id)">x</button>
+		<div class="cancel-button" @click="removePerson(id)"/>
 	</div>
 </template>
 

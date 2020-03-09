@@ -1,26 +1,33 @@
 <template>
-	<div v-if="friend">
-		<h1>ID друга {{ id }}</h1>
-		<h2>У кого в друзьях:</h2>
-		<p v-for="personId in friendPersons" :key="personId">
-			<span>{{ persons[personId].first_name }} {{ persons[personId].last_name }}</span>
-		</p>
+	<div
+		id="page-friend"
+		v-if="friend"
+		:class="`frequency-${frequency}`"
+	>
+		<div class="friend-info">{{ friendInfo.last_name }} {{ friendInfo.first_name }}</div>
+		<div class="friend-id">ID друга: {{ id }}</div>
+		<div class="friend-persons d-flex">
+			<div>У кого в друзьях:</div>
 
-		<template v-if="!error">
-			<h2>Стена:</h2>
-			<div v-for="wallItem in wall" :key="wallItem.id">
-				<div style="white-space: pre-wrap;">{{ wallItem.text }}</div>
-				<div>
-					<a
-						:href="`//vk.com/wall${wallItem.from_id}_${wallItem.id}`"
-						target="_blank"
-					>Перейти к источнику</a>
+			<div class="friend-persons-list">
+				<div v-for="personId in friendPersons" :key="personId">
+					<span>{{ persons[personId].first_name }} {{ persons[personId].last_name }}</span>
 				</div>
-				<hr>
 			</div>
-		</template>
+		</div>
 
-		<div v-else style="color: red;">{{ error }}</div>
+		<div v-if="!error" class="friend-wall">
+			<div class="friend-wall-label">Стена:</div>
+
+			<WallItem
+				v-for="wallItem in wall"
+				:key="wallItem.id"
+				:item="wallItem"
+				class="friend-wall-item"
+			/>
+		</div>
+
+		<div v-else class="color-danger">{{ error }}</div>
 	</div>
 
 	<div v-else>Друг не найден</div>
@@ -28,9 +35,13 @@
 
 <script>
 import { mapState } from 'vuex'
+import WallItem from 'Components/WallItem'
 
 export default {
 	name: 'FriendPage',
+	components: {
+		WallItem,
+	},
 	props: {
 		id: {
 			type: [String, Number],
@@ -47,12 +58,23 @@ export default {
 		...mapState([
 			'persons',
 			'friendsWithPersons',
+			'filteredPersons',
+			'friends',
 		]),
 		friend() {
 			return this.friendsWithPersons.find(friend => friend.id === +this.id)
 		},
+		friendInfo() {
+			return this.friends[this.id]
+		},
 		friendPersons() {
 			return this.friend.persons
+		},
+		personsCount() {
+			return this.friend.persons.length
+		},
+		frequency() {
+			return Math.round((this.personsCount / this.filteredPersons.length) * 7)
 		},
 	},
 	watch: {
@@ -76,3 +98,41 @@ export default {
 	},
 }
 </script>
+
+<style lang="scss">
+#page-friend {
+	padding: 20px 0;
+
+	.friend {
+		&-id, &-info {
+			margin-bottom: 12px;
+		}
+
+		&-persons {
+			justify-content: center;
+			line-height: 1.5;
+			margin-bottom: 12px;
+
+			&-list {
+				margin-left: 12px;
+				text-align: left;
+			}
+		}
+
+		&-wall {
+			margin-top: 24px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+
+			&-label {
+				margin-bottom: 12px;
+			}
+
+			&-item {
+				max-width: 400px;
+			}
+		}
+	}
+}
+</style>
