@@ -4,8 +4,8 @@
 
 		<Person
 			v-for="personId in sortedPersons"
-			:key="personId"
 			:id="personId"
+			:key="personId"
 		/>
 	</div>
 </template>

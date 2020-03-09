@@ -1,6 +1,9 @@
 <template>
 	<div id="app">
-		<div v-if="error" style="background-color: salmon;">{{ error }}</div>
+		<div v-if="error" class="error-message">
+			<span>{{ error }}</span>
+			<div class="cancel-button white" @click="cancelError"/>
+		</div>
 		<div id="nav">
 			<p>
 				<router-link :to="{ name: 'Home' }">Home</router-link>
@@ -11,15 +14,22 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
+import { mutationTypes } from 'Plugins/store'
 
 export default {
 	computed: {
 		...mapState(['error']),
 	},
 	methods: {
+		...mapMutations([
+			mutationTypes.SET_ERROR,
+		]),
 		async login() {
 			VK.Auth.login() // eslint-disable-line
+		},
+		cancelError() {
+			this[mutationTypes.SET_ERROR]()
 		},
 	},
 }
@@ -129,6 +139,16 @@ button {
 			background-color: black;
 		}
 	}
+
+	&.white {
+		&:hover {
+			background-color: lightgray;
+		}
+
+		&::before, &::after {
+			background-color: white;
+		}
+	}
 }
 
 .d-flex {
@@ -139,5 +159,13 @@ button {
 	&-danger {
 		color: #b71c1c !important;
 	}
+}
+
+.error-message {
+	background-color: salmon;
+	color: white;
+	padding: 4px 12px;
+	display: flex;
+	justify-content: space-between;
 }
 </style>

@@ -16,7 +16,7 @@
 			</div>
 		</div>
 
-		<div v-if="!error" class="friend-wall">
+		<div v-if="wall.length > 0" class="friend-wall">
 			<div class="friend-wall-label">Стена:</div>
 
 			<WallItem
@@ -26,15 +26,14 @@
 				class="friend-wall-item"
 			/>
 		</div>
-
-		<div v-else class="color-danger">{{ error }}</div>
 	</div>
 
 	<div v-else>Друг не найден</div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
+import { mutationTypes } from 'Plugins/store'
 import WallItem from 'Components/WallItem'
 
 export default {
@@ -51,7 +50,6 @@ export default {
 	data() {
 		return {
 			wall: [],
-			error: '',
 		}
 	},
 	computed: {
@@ -84,17 +82,17 @@ export default {
 		},
 	},
 	methods: {
+		...mapMutations([
+			mutationTypes.SET_ERROR,
+		]),
 		async getWall() {
 			if (!this.friend) return
-			this.error = ''
+			this[mutationTypes.SET_ERROR]()
 
 			try {
 				this.wall = await this.$http.getWall(this.id)
-
-				console.log(this.wall)
 			} catch (error) {
-				if (error.error_code === 30) this.error = 'Приватный профиль. Стена недоступна'
-				else this.error = error.error_msg
+				this[mutationTypes.SET_ERROR](error)
 			}
 		},
 	},

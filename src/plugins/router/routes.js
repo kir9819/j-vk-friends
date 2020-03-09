@@ -25,9 +25,4 @@ export default [
 		},
 		props: true,
 	},
-	{
-		name: 'EndAuthorizing',
-		path: '/end_authorizing',
-		component: () => import('Pages/EndAuthorizing'),
-	},
 ]

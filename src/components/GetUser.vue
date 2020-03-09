@@ -36,18 +36,22 @@ export default {
 		this.focus()
 	},
 	methods: {
-		...mapMutations([mutationTypes.SET_FILTERED_FRIENDS]),
+		...mapMutations([
+			mutationTypes.SET_FILTERED_FRIENDS,
+			mutationTypes.SET_ERROR,
+		]),
 		async search() {
 			if (!this.userId) return
 
 			this.loading = true
+			this[mutationTypes.SET_ERROR]()
 
 			try {
 				const { user: person, friends } = await this.$http.getFriends(this.userId)
 
 				this.$store.dispatch('addPerson', { person, friends })
 			} catch (error) {
-				console.error(error)
+				this[mutationTypes.SET_ERROR](error)
 			} finally {
 				this.loading = false
 				this.userId = ''

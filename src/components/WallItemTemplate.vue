@@ -9,7 +9,7 @@
 			:key="i"
 			class="wall-item-attachments"
 		>
-			<Component :is="attachment.wallItemType" v-bind:[attachment.type]="attachment[attachment.type]"/>
+			<Component :is="attachment.wallItemType" :[attachment.type]="attachment[attachment.type]"/>
 		</div>
 
 		<div v-if="item.copy_history" class="wall-item-history">
@@ -77,6 +77,7 @@ export default {
 
 	&-text {
 		white-space: pre-wrap;
+		text-align: left;
 	}
 
 	&-warning {
