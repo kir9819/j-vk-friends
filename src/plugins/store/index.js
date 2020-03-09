@@ -17,6 +17,7 @@ const store = new Vuex.Store({
 		persons: {},
 		friends: {},
 		friendsWithPersons: [],
+		filteredPersons: [],
 		chosenPersons: [],
 		error: null,
 	},
@@ -55,6 +56,8 @@ const store = new Vuex.Store({
 					}
 				})
 			})
+
+			state.filteredPersons = state.chosenPersons
 		},
 		[mutationTypes.REMOVE_FRIENDS](state, personId) {
 			const friendsWithPersons = []
