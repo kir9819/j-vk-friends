@@ -1,7 +1,7 @@
 <template>
 	<div
-		id="page-friend"
 		v-if="friend"
+		id="page-friend"
 		:class="`frequency-${frequency}`"
 	>
 		<div class="friend-info">{{ friendInfo.last_name }} {{ friendInfo.first_name }}</div>
@@ -90,6 +90,8 @@ export default {
 
 			try {
 				this.wall = await this.$http.getWall(this.id)
+
+				console.log(this.wall)
 			} catch (error) {
 				if (error.error_code === 30) this.error = 'Приватный профиль. Стена недоступна'
 				else this.error = error.error_msg
@@ -130,7 +132,9 @@ export default {
 			}
 
 			&-item {
+				width: 100%;
 				max-width: 400px;
+				margin-bottom: 12px;
 			}
 		}
 	}

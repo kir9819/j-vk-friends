@@ -1,19 +1,21 @@
 <template>
-	<div>
-		<div style="white-space: pre-wrap;">{{ item.text }}</div>
+	<WallItemTemplate :item="item">
 		<div>
 			<a
 				:href="`//vk.com/wall${item.from_id}_${item.id}`"
 				target="_blank"
-			>Перейти к источнику</a>
+			>Перейти к записи</a>
 		</div>
-		<hr>
-	</div>
+	</WallItemTemplate>
 </template>
 
 <script>
+import WallItemTemplate from './WallItemTemplate'
+
 export default {
-	name: 'WallItem',
+	components: {
+		WallItemTemplate,
+	},
 	props: {
 		item: {
 			type: Object,
