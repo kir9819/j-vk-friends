@@ -12,7 +12,7 @@
 import { mapState } from 'vuex'
 
 export default {
-	name: 'Person',
+	name: 'PersonPage',
 	props: {
 		id: {
 			type: [String, Number],

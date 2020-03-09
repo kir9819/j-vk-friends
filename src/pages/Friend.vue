@@ -30,7 +30,7 @@
 import { mapState } from 'vuex'
 
 export default {
-	name: 'Friend',
+	name: 'FriendPage',
 	props: {
 		id: {
 			type: [String, Number],

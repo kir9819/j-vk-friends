@@ -2,7 +2,7 @@
 	<div class="home">
 		<div id="vk_api_transport"/>
 		<GetUser/>
-		<div style="display: flex; justify-content: space-around;">
+		<div v-if="isPersonsExist" style="display: flex; justify-content: space-between;">
 			<Persons style="flex-shrink: 0;"/>
 			<Friends/>
 		</div>
@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import GetUser from 'Components/GetUser'
 import Persons from 'Components/Persons'
 import Friends from 'Components/Friends'
@@ -20,6 +21,12 @@ export default {
 		GetUser,
 		Persons,
 		Friends,
+	},
+	computed: {
+		...mapState(['persons']),
+		isPersonsExist() {
+			return Object.keys(this.persons).length > 0
+		},
 	},
 }
 </script>
