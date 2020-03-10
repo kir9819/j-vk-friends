@@ -109,6 +109,7 @@ export default {
 		}
 
 		&-persons {
+			flex-wrap: wrap;
 			justify-content: center;
 			line-height: 1.5;
 			margin-bottom: 12px;

@@ -74,10 +74,12 @@ export default {
 	background-color: white;
 	color: #333;
 	border-radius: 8px;
+	box-sizing: border-box;
 
 	&-text {
 		white-space: pre-wrap;
 		text-align: left;
+		overflow-wrap: break-word;
 	}
 
 	&-warning {
