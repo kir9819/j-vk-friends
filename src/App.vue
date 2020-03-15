@@ -8,8 +8,10 @@
 			<p>
 				<router-link :to="{ name: 'Home' }">Home</router-link>
 			</p>
+			<button v-if="!isAuthorized" @click="login">Войти через ВК</button>
 		</div>
-		<router-view/>
+
+		<router-view v-if="isAuthorized"/>
 	</div>
 </template>
 
@@ -19,14 +21,15 @@ import { mutationTypes } from 'Plugins/store'
 
 export default {
 	computed: {
-		...mapState(['error']),
+		...mapState(['error', 'isAuthorized']),
 	},
 	methods: {
 		...mapMutations([
 			mutationTypes.SET_ERROR,
+			mutationTypes.SET_AUTH,
 		]),
 		async login() {
-			VK.Auth.login() // eslint-disable-line
+			this[mutationTypes.SET_AUTH](await this.$http.login())
 		},
 		cancelError() {
 			this[mutationTypes.SET_ERROR]()

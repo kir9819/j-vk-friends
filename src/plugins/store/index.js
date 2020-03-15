@@ -11,6 +11,7 @@ export const mutationTypes = {
 	REMOVE_PERSON: 'REMOVE_PERSON',
 	CHANGE_CHOSEN_PERSONS: 'CHANGE_CHOSEN_PERSONS',
 	SET_ERROR: 'SET_ERROR',
+	SET_AUTH: 'SET_AUTH',
 }
 
 export const VK_API_ERRORS = {
@@ -66,6 +67,7 @@ const store = new Vuex.Store({
 		filteredPersons: [],
 		chosenPersons: [],
 		error: null,
+		isAuthorized: false,
 	},
 	mutations: {
 		[mutationTypes.SET_PERSON](state, { person, friendIds }) {
@@ -140,6 +142,9 @@ const store = new Vuex.Store({
 			else if (error.error_code) state.error = VK_API_ERRORS[error.error_code]
 			else state.error = error
 		},
+		[mutationTypes.SET_AUTH](state, status) {
+			state.isAuthorized = status
+		},
 	},
 	actions: {
 		removePerson({ commit }, id) {
@@ -152,8 +157,6 @@ const store = new Vuex.Store({
 			commit(mutationTypes.SET_PERSON, { person, friendIds: friends.map(friend => friend.id) })
 			commit(mutationTypes.SET_FRIENDS, friends)
 		},
-	},
-	modules: {
 	},
 })
 

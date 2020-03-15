@@ -1,48 +1,77 @@
+import store, { mutationTypes } from 'Plugins/store'
+
 const API_VERSON = '5.89'
 
-async function getUser(id) {
+function getVKInstanse() {
+	if (!window.VK) throw Error
+	return window.VK
+}
+
+const VK = getVKInstanse()
+
+function getAuthStatus() {
+	const isAuthorized = VK._userStatus === 'connected' // eslint-disable-line
+
+	if (!isAuthorized) store.commit(mutationTypes.SET_AUTH, false)
+
+	return isAuthorized
+	/* return new Promise(resolve => {
+		VK.Auth.getLoginStatus(response => {
+			resolve(response.status === 'connected')
+		})
+	}) */
+}
+
+if (getAuthStatus()) store.commit(mutationTypes.SET_AUTH, true)
+
+async function VKApiRequest(...options) {
+	options[1].v = API_VERSON
+
+	if (!getAuthStatus()) throw new Error('Требуется вход')
+
 	return new Promise((resolve, reject) => {
-		VK.Api.call('users.get', { // eslint-disable-line
-			user_id: id, fields: 'id,first_name,last_name,is_closed,sex,bdate,photo_100', v: API_VERSON,
-		}, r => {
-			if (r.response) {
-				const response = r.response[0]
-
-				if (response.is_closed) {
-					response.error = 'Профиль закрыт, друзья недоступны'
-				}
-
-				resolve(response)
-			}
-
+		VK.Api.call(...options, r => {
+			if (r.response) resolve(r.response)
 			reject(r.error)
 		})
 	})
+}
+
+async function getUser(id) {
+	const response = await VKApiRequest('users.get', {
+		user_id: id,
+		fields: 'id,first_name,last_name,is_closed,sex,bdate,photo_100',
+	})
+
+	if (response[0].is_closed) {
+		response[0].error = 'Профиль закрыт, друзья недоступны'
+	}
+
+	return response[0]
 }
 
 async function getFriends(id) {
-	return new Promise((resolve, reject) => {
-		VK.Api.call('friends.get', { // eslint-disable-line
-			user_id: id, fields: 'nickname', v: API_VERSON,
-		}, r => {
-			if (r.response) resolve(r.response.items)
-			reject(r.error)
-		})
-	})
+	return (await VKApiRequest('friends.get', {
+		user_id: id,
+		fields: 'nickname',
+	})).items
 }
 
 async function getWall(userId) {
-	return new Promise((resolve, reject) => {
-		VK.Api.call('wall.get', { // eslint-disable-line
-			owner_id: userId, v: API_VERSON,
-		}, r => {
-			if (r.response) resolve(r.response.items)
-			reject(r.error)
+	return (await VKApiRequest('wall.get', {
+		owner_id: userId,
+	})).items
+}
+
+async function login() {
+	return new Promise(resolve => {
+		VK.Auth.login(response => {
+			resolve(!!response.session)
 		})
 	})
 }
 
-const http = {
+export const http = {
 	async getFriends(userId) {
 		const user = await getUser(userId)
 
@@ -53,6 +82,8 @@ const http = {
 		return { user, friends }
 	},
 	getWall,
+	getAuthStatus,
+	login,
 }
 
 // export as vue plugin
